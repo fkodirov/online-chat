@@ -4,7 +4,7 @@ import axios from "axios";
 interface Imessage {
   id?: number;
   text: string;
-  tags: string[];
+  tags: string;
 }
 interface ChatProps {
   messages: Imessage[];
@@ -19,8 +19,8 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
 
   const handleSendMessage = () => {
     if (messageText.trim() !== "") {
-      const tags = messageText.match(/#[a-z]+/gi);
-      onSendMessage({ text: messageText, tags: tags ? tags : [] });
+      const tags = messageText.match(/#[a-z]+/gi)?.join(",");
+      onSendMessage({ text: messageText, tags: tags ? tags : "" });
       setMessageText("");
       fetchTags();
     }
@@ -58,7 +58,7 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
   useEffect(() => {
     fetchTags();
   }, []);
-
+  console.log(selectedTags);
   return (
     <>
       <Tags
@@ -81,11 +81,24 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
           <button onClick={handleSendMessage}>Send</button>
         </div>
         <div className="messages">
-          {messages.map((message) => (
-            <div key={message.id} className="message">
-              <p>{message.text}</p>
-            </div>
-          ))}
+          {selectedTags.length === 0
+            ? messages.map((message) => (
+                <div key={message.id} className="message">
+                  <p>{message.text}</p>
+                </div>
+              ))
+            : messages
+                .filter((message) => {
+                  const messagetag = message.tags.split(",");
+                  return messagetag.some(
+                    (tag) => selectedTags.includes(tag) || tag === ""
+                  );
+                })
+                .map((message) => (
+                  <div key={message.id} className="message">
+                    <p>{message.text}</p>
+                  </div>
+                ))}
         </div>
       </div>
     </>

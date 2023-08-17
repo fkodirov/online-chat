@@ -6,7 +6,7 @@ import axios from "axios";
 interface Imessage {
   id?: number;
   text: string;
-  tags: string[];
+  tags: string;
 }
 function App() {
   const [messages, setMessages] = useState<Imessage[]>([]);
@@ -30,6 +30,7 @@ function App() {
         "http://localhost:4000/messages"
       );
       setMessages(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
