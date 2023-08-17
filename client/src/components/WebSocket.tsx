@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { WSPops } from "../types/types";
 
-const WebSocketClient = ({ onMessageReceived, setUserId }) => {
+const WebSocketClient: React.FC<WSPops> = ({
+  onMessageReceived,
+  setUserId,
+}) => {
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:4000");
 

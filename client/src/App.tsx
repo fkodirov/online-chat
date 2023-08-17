@@ -3,12 +3,8 @@ import { useState, useEffect } from "react";
 import ChatPanel from "./components/Chat";
 import WebSocketClient from "./components/WebSocket";
 import axios from "axios";
-interface Imessage {
-  id?: number;
-  text: string;
-  tags: string;
-  userId: string;
-}
+import { Imessage } from "./types/types";
+
 function App() {
   const [messages, setMessages] = useState<Imessage[]>([]);
   const [userId, setUserId] = useState<string>("");

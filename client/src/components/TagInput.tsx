@@ -1,15 +1,12 @@
 import Autocomplete from "@mui/joy/Autocomplete";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { PlusCircleFill } from "react-bootstrap-icons";
+import { TagsInputProps } from "../types/types";
 
-interface TagsInputProps {
-  addNewTag: (tag: string) => void;
-  allTags: string[];
-}
 const TagInput: React.FC<TagsInputProps> = ({ addNewTag, allTags }) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleInputChange = (_, v: string) => {
+  const handleInputChange = (_: SyntheticEvent, v: string) => {
     setInputValue(v);
   };
 

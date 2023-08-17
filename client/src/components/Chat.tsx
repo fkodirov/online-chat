@@ -2,17 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Tags from "../components/Tags";
 import axios from "axios";
 import { SendFill } from "react-bootstrap-icons";
-interface Imessage {
-  id?: number;
-  text: string;
-  tags: string;
-  userId: string;
-}
-interface ChatProps {
-  messages: Imessage[];
-  onSendMessage: (message: Imessage) => void;
-  userId: string;
-}
+import { ChatProps } from "../types/types";
 
 const Chat: React.FC<ChatProps> = ({ messages, onSendMessage, userId }) => {
   const [messageText, setMessageText] = useState("");

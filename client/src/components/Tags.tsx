@@ -1,15 +1,6 @@
 import { Trash } from "react-bootstrap-icons";
 import TagInput from "./TagInput";
-
-interface TagsProps {
-  allTags: string[];
-  userTags: string[];
-  selectedTags: string[];
-  onAddTag: (tag: string) => void;
-  onDeleteTag: (tag: string) => void;
-  onSelectTag: (tag: string) => void;
-  onDeselectTag: (tag: string) => void;
-}
+import { TagsProps } from "../types/types";
 
 const Tags: React.FC<TagsProps> = ({
   allTags,
