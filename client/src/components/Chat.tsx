@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tags from "../components/Tags";
+import axios from "axios";
 interface Imessage {
   id?: number;
   text: string;
@@ -14,12 +15,14 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
   const [messageText, setMessageText] = useState("");
   const [messageTags, setMessageTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
 
   const handleSendMessage = () => {
     if (messageText.trim() !== "") {
       const tags = messageText.match(/#[a-z]+/gi);
       onSendMessage({ text: messageText, tags: tags ? tags : [] });
       setMessageText("");
+      fetchTags();
     }
   };
 
@@ -43,10 +46,24 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
     setSelectedTags(updatedTags);
   };
 
+  const fetchTags = async () => {
+    try {
+      const response = await axios.get<string[]>("http://localhost:4000/tags");
+      setAllTags(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
   return (
     <>
       <Tags
-        tags={messageTags}
+        allTags={allTags}
+        userTags={messageTags}
         selectedTags={selectedTags}
         onAddTag={handleAddTag}
         onDeleteTag={handleDeleteTag}

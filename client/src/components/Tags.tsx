@@ -1,7 +1,9 @@
-import { useState } from "react";
 import { Trash } from "react-bootstrap-icons";
+import TagInput from "./TagInput";
+
 interface TagsProps {
-  tags: string[];
+  allTags: string[];
+  userTags: string[];
   selectedTags: string[];
   onAddTag: (tag: string) => void;
   onDeleteTag: (tag: string) => void;
@@ -10,41 +12,25 @@ interface TagsProps {
 }
 
 const Tags: React.FC<TagsProps> = ({
-  tags,
+  allTags,
+  userTags,
   selectedTags,
   onAddTag,
   onDeleteTag,
   onSelectTag,
   onDeselectTag,
 }) => {
-  const [tagInput, setTagInput] = useState("");
-
-  const handleAddTag = () => {
-    if (tagInput.trim() !== "") {
-      onAddTag(tagInput);
-      setTagInput("");
+  const handleAddTag = (e: string) => {
+    if (e.trim() !== "") {
+      onAddTag(e);
     }
   };
-  // const fetchTags = async () => {
-  //   try {
-  //     const response = await axios.get<string[]>("/tags");
-  //     setTags(response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return (
-    <div className="tag-input">
-      <input
-        type="text"
-        value={tagInput}
-        onChange={(e) => setTagInput(e.target.value)}
-        placeholder="Enter tags..."
-      />
-      <button onClick={handleAddTag}>Add Tag</button>
+    <div className="tag-block">
+      <TagInput addNewTag={handleAddTag} allTags={allTags} />
       <div className="tags">
-        {tags.map((tag: string, index: number) => (
+        {userTags.map((tag: string, index: number) => (
           <div key={index} className="tag">
             <label key={tag} className="tag-checkbox">
               <input
