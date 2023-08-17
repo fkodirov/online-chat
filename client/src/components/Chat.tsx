@@ -1,38 +1,54 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Tags from "../components/Tags";
 import axios from "axios";
+import { SendFill } from "react-bootstrap-icons";
 interface Imessage {
   id?: number;
   text: string;
   tags: string;
+  userId: string;
 }
 interface ChatProps {
   messages: Imessage[];
   onSendMessage: (message: Imessage) => void;
+  userId: string;
 }
 
-const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
+const Chat: React.FC<ChatProps> = ({ messages, onSendMessage, userId }) => {
   const [messageText, setMessageText] = useState("");
   const [messageTags, setMessageTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [allTags, setAllTags] = useState<string[]>([]);
+  const messageListRef = useRef<HTMLUListElement>(null);
+
+  const scrollToBottom = () => {
+    if (messageListRef.current) {
+      const list = messageListRef.current;
+      list.scrollTop = list.scrollHeight - list.clientHeight;
+    }
+  };
 
   const handleSendMessage = () => {
     if (messageText.trim() !== "") {
       const tags = messageText.match(/#[a-z]+/gi)?.join(",");
-      onSendMessage({ text: messageText, tags: tags ? tags : "" });
+      onSendMessage({ text: messageText, tags: tags ? tags : "", userId });
       setMessageText("");
       fetchTags();
     }
   };
 
   const handleAddTag = (tag: string) => {
-    setMessageTags([...messageTags, tag]);
+    let getTag = tag.trim();
+    if (getTag[0] != "#") {
+      getTag = "#" + getTag;
+    }
+    setMessageTags([...messageTags, getTag]);
   };
 
   const handleDeleteTag = (tagToDelete: string) => {
     const updatedTags = messageTags.filter((tag) => tag !== tagToDelete);
     setMessageTags(updatedTags);
+    setSelectedTags(updatedTags);
   };
 
   const handleSelectTag = (tag: string) => {
@@ -50,7 +66,6 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
     try {
       const response = await axios.get<string[]>("http://localhost:4000/tags");
       setAllTags(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -58,7 +73,18 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
   useEffect(() => {
     fetchTags();
   }, []);
-  console.log(selectedTags);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <>
       <Tags
@@ -70,35 +96,64 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage }) => {
         onSelectTag={handleSelectTag}
         onDeselectTag={handleDeselectTag}
       />
-
-      <div className="chat">
-        <div className="message-form">
-          <textarea
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            placeholder="Type your message..."
-          />
-          <button onClick={handleSendMessage}>Send</button>
+      <div className="chat vh-90">
+        <div className="chat-history vh-80 overflow-hidden">
+          <ul
+            className="m-b-0 vh-75 overflow-auto scroll-block"
+            ref={messageListRef}
+          >
+            {selectedTags.length === 0
+              ? messages.map((message) => (
+                  <li key={message.id} className="clearfix p-3">
+                    <div
+                      className={`message  ${
+                        message.userId === userId
+                          ? "my-message"
+                          : "other-message float-right"
+                      }`}
+                    >
+                      {message.text}
+                    </div>
+                  </li>
+                ))
+              : messages
+                  .filter((message) => {
+                    const messagetag = message.tags.split(",");
+                    return messagetag.some(
+                      (tag) => selectedTags.includes(tag) || tag === ""
+                    );
+                  })
+                  .map((message) => (
+                    <li key={message.id} className="clearfix p-3">
+                      <div
+                        className={`message  ${
+                          message.userId === userId
+                            ? "my-message"
+                            : "other-message float-right"
+                        }`}
+                      >
+                        {message.text}
+                      </div>
+                    </li>
+                  ))}
+          </ul>
         </div>
-        <div className="messages">
-          {selectedTags.length === 0
-            ? messages.map((message) => (
-                <div key={message.id} className="message">
-                  <p>{message.text}</p>
-                </div>
-              ))
-            : messages
-                .filter((message) => {
-                  const messagetag = message.tags.split(",");
-                  return messagetag.some(
-                    (tag) => selectedTags.includes(tag) || tag === ""
-                  );
-                })
-                .map((message) => (
-                  <div key={message.id} className="message">
-                    <p>{message.text}</p>
-                  </div>
-                ))}
+        <div className="chat-message clearfix">
+          <div className="input-group mb-0">
+            <div className="input-group-prepend">
+              <span className="input-group-text">
+                <SendFill onClick={handleSendMessage} color="black" size={25} />
+              </span>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter text here..."
+              value={messageText}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setMessageText(e.target.value)}
+            />
+          </div>
         </div>
       </div>
     </>

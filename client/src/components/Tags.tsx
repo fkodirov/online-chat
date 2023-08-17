@@ -27,32 +27,40 @@ const Tags: React.FC<TagsProps> = ({
   };
 
   return (
-    <div className="tag-block">
-      <TagInput addNewTag={handleAddTag} allTags={allTags} />
-      <div className="tags">
-        {userTags.map((tag: string, index: number) => (
-          <div key={index} className="tag">
-            <label key={tag} className="tag-checkbox">
-              <input
-                type="checkbox"
-                checked={selectedTags.includes(tag)}
-                onChange={() => {
-                  if (selectedTags.includes(tag)) {
-                    onDeselectTag(tag);
-                  } else {
-                    onSelectTag(tag);
-                  }
-                }}
-              />
-              {tag}
-            </label>
-            <span className="delete-icon" onClick={() => onDeleteTag(tag)}>
-              <Trash color="black" size={22} />
-            </span>
-          </div>
-        ))}
+    <>
+      <div className="tags-list">
+        <div className="input-group">
+          <TagInput addNewTag={handleAddTag} allTags={allTags} />
+        </div>
+        <ul className="list-unstyled chat-list mt-2 mb-0">
+          {userTags.map((tag: string, index: number) => (
+            <li className="d-flex justify-content-between" key={index}>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={selectedTags.includes(tag)}
+                  id={tag}
+                  onChange={() => {
+                    if (selectedTags.includes(tag)) {
+                      onDeselectTag(tag);
+                    } else {
+                      onSelectTag(tag);
+                    }
+                  }}
+                />
+                <label key={tag} htmlFor={tag} className="tag-checkbox">
+                  {tag}
+                </label>
+              </div>
+              <span className="delete-icon" onClick={() => onDeleteTag(tag)}>
+                <Trash color="black" size={25} />
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </>
   );
 };
 

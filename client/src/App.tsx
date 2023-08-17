@@ -7,9 +7,11 @@ interface Imessage {
   id?: number;
   text: string;
   tags: string;
+  userId: string;
 }
 function App() {
   const [messages, setMessages] = useState<Imessage[]>([]);
+  const [userId, setUserId] = useState<string>("");
   useEffect(() => {
     handleGetMessage();
   }, []);
@@ -30,16 +32,29 @@ function App() {
         "http://localhost:4000/messages"
       );
       setMessages(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
   };
+  const setId = (id: string) => {
+    setUserId(id);
+  };
 
   return (
-    <div className="App">
-      <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
-      <WebSocketClient onMessageReceived={handleNewMessage} />
+    <div className="container">
+      <div className="col-lg-12">
+        <div className="card chat-app">
+          <ChatPanel
+            messages={messages}
+            onSendMessage={handleSendMessage}
+            userId={userId}
+          />
+          <WebSocketClient
+            onMessageReceived={handleNewMessage}
+            setUserId={setId}
+          />
+        </div>
+      </div>
     </div>
   );
 }

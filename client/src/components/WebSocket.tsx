@@ -1,11 +1,15 @@
 import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-const WebSocketClient = ({ onMessageReceived }) => {
+const WebSocketClient = ({ onMessageReceived, setUserId }) => {
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connection opened");
+      const userId = uuidv4();
+      setUserId(userId);
+      console.log(userId);
     };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
