@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatPanel from "./components/Chat";
 import WebSocketClient from "./components/WebSocket";
 import axios from "axios";
@@ -10,7 +10,9 @@ interface Imessage {
 }
 function App() {
   const [messages, setMessages] = useState<Imessage[]>([]);
-
+  useEffect(() => {
+    handleGetMessage();
+  }, []);
   const handleNewMessage = (message: Imessage) => {
     setMessages((prevMessages) => [...prevMessages, message]);
   };
@@ -18,6 +20,16 @@ function App() {
   const handleSendMessage = async (message: Imessage) => {
     try {
       await axios.post<Imessage>("http://localhost:4000/messages", message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleGetMessage = async () => {
+    try {
+      const response = await axios.get<Imessage[]>(
+        "http://localhost:4000/messages"
+      );
+      setMessages(response.data);
     } catch (error) {
       console.error(error);
     }
