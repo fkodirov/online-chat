@@ -20,7 +20,7 @@ const Tags: React.FC<TagsProps> = ({
   return (
     <>
       <div className="tags-list">
-        <div className="input-group">
+        <div className="input-group tags">
           <TagInput addNewTag={handleAddTag} allTags={allTags} />
         </div>
         <ul className="list-unstyled chat-list mt-2 mb-0">

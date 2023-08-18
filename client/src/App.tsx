@@ -17,7 +17,10 @@ function App() {
 
   const handleSendMessage = async (message: Imessage) => {
     try {
-      await axios.post<Imessage>("http://localhost:4000/messages", message);
+      await axios.post<Imessage>(
+        "https://online-chat-sayu.onrender.com/messages",
+        message
+      );
     } catch (error) {
       console.error(error);
     }
@@ -25,7 +28,7 @@ function App() {
   const handleGetMessage = async () => {
     try {
       const response = await axios.get<Imessage[]>(
-        "http://localhost:4000/messages"
+        "https://online-chat-sayu.onrender.com/messages"
       );
       setMessages(response.data);
     } catch (error) {
@@ -37,7 +40,7 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className="container-md">
       <div className="col-lg-12">
         <div className="card chat-app">
           <ChatPanel

@@ -20,7 +20,7 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage, userId }) => {
 
   const handleSendMessage = () => {
     if (messageText.trim() !== "") {
-      const tags = messageText.match(/#[a-z]+/gi)?.join(",");
+      const tags = messageText.match(/#[а-яёА-ЯЁa-zA-Z0-9_]+/gi)?.join(",");
       onSendMessage({ text: messageText, tags: tags ? tags : "", userId });
       setMessageText("");
       fetchTags();
@@ -54,7 +54,9 @@ const Chat: React.FC<ChatProps> = ({ messages, onSendMessage, userId }) => {
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get<string[]>("http://localhost:4000/tags");
+      const response = await axios.get<string[]>(
+        "https://online-chat-sayu.onrender.com/tags"
+      );
       setAllTags(response.data);
     } catch (error) {
       console.error(error);

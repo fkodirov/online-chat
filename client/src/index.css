@@ -17,8 +17,9 @@ height: 100vh;
 .add-hashtag{
   width: 80%;
 }
-.add-button{
-  width: 20%;
+.tags{
+  display: flex;
+  flex-wrap: nowrap;
 }
 .add-button span{
   display: flex;
@@ -35,7 +36,7 @@ height: 100vh;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
 .chat-app .tags-list {
-  width: 280px;
+  width: 35%;
   position: absolute;
   left: 0;
   top: 0;
@@ -44,7 +45,7 @@ height: 100vh;
 }
 
 .chat-app .chat {
-  margin-left: 280px;
+  margin-left: 35%;
   border-left: 1px solid #eaeaea
 }
 
@@ -234,14 +235,21 @@ height: 100vh;
 .scroll-block::-webkit-scrollbar {width: 6px;}
 .scroll-block::-webkit-scrollbar-thumb {border-radius: 4px;background: #f0f2f5;}
 .scroll-block:hover::-webkit-scrollbar-thumb {background: #6a7d9b;}
-@media only screen and (max-width: 767px) {
+@media (max-width: 766px) {
+  .container{
+    max-width: 720px;
+  }
+  .scroll-block{
+    height: 375px;
+  }
   .chat-app .tags-list {
-      height: 182px;
+      height: 220px;
       width: 100%;
       overflow-x: auto;
       background: #fff;
   }
   .chat-list{
+    height: 100px;
     display: flex;
     flex-wrap: wrap;
     border-bottom: solid aliceblue;
@@ -256,32 +264,29 @@ height: 100vh;
       border-radius: 0.55rem 0.55rem 0 0
   }
   .chat-app .chat-history {
+      height: 400px;
       overflow-x: auto
   }
   .chat-history {
-      height: 585px;
-      overflow-x: auto
+    margin-top: 190px;
+  }
+  .tags{
+    justify-content: center;
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 992px) {
-  .chat-app .chat-list {
-      height: 650px;
-      overflow-x: auto
-  }
-  .chat-app .chat-history {
-      height: 600px;
-      overflow-x: auto
-  }
+@media (max-width: 768px) {
+  .chat-list {
+    height: 120px;}
+
 }
 
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+@media (max-width: 576px) { 
   .chat-app .chat-list {
-      height: 480px;
-      overflow-x: auto
-  }
-  .chat-app .chat-history {
-      height: calc(100vh - 350px);
-      overflow-x: auto
-  }
+    height: 90px;
+    overflow-x: auto
 }
+.scroll-block{
+  height: 460px;
+}
+ }

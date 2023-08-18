@@ -7,7 +7,7 @@ const WebSocketClient: React.FC<WSPops> = ({
   setUserId,
 }) => {
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:4000");
+    const socket = new WebSocket("wss://online-chat-sayu.onrender.com");
 
     socket.onopen = () => {
       console.log("WebSocket connection opened");
